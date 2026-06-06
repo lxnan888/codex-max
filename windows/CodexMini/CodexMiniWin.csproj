@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Codex Max</AssemblyName>
+    <RootNamespace>CodexMiniWin</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="CodexMaxPayload.zip" LogicalName="CodexMaxPayload.zip" Condition="Exists('CodexMaxPayload.zip')" />
+    <Content Include="..\..\server.js" Link="Resources\CodexMaxProject\server.js" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\package.json" Link="Resources\CodexMaxProject\package.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\src\**\*" Link="Resources\CodexMaxProject\src\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\public\**\*" Link="Resources\CodexMaxProject\public\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

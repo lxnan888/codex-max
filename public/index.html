@@ -1638,11 +1638,11 @@
       <form class="composer" id="composer">
         <button class="icon-btn" id="attach" type="button" title="添加照片或附件" aria-label="添加照片或附件">＋</button>
         <input class="file-input" id="file-input" type="file" accept="image/*" multiple />
-        <textarea id="text" rows="1" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="发消息给 Codex Mini"></textarea>
+        <textarea id="text" rows="1" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="发消息给 Codex Max"></textarea>
         <button class="send-btn stop-btn composer-action-hidden" id="stop" type="button" title="取消当前 Codex 回复" aria-label="取消当前 Codex 回复" hidden><span class="stop-square" aria-hidden="true"></span></button>
-        <button class="send-btn" id="send" type="submit" title="发送给 Codex Mini" aria-label="发送给 Codex Mini">↑</button>
+        <button class="send-btn" id="send" type="submit" title="发送给 Codex Max" aria-label="发送给 Codex Max">↑</button>
       </form>
-      <div class="composer-signature" aria-hidden="true">Codex Mini By Coming Rain.</div>
+      <div class="composer-signature" aria-hidden="true">Codex Max By Coming Rain.</div>
     </footer>
   </div>
 
@@ -1696,7 +1696,7 @@
     if (queryToken) localStorage.setItem('codexMini.token', queryToken);
     const token = queryToken || localStorage.getItem('codexMini.token') || '';
     function detectBasePath(pathname) {
-      if (pathname === '/codex-mini' || pathname.startsWith('/codex-mini/')) return '/codex-mini';
+      if (pathname === '/codex-max' || pathname.startsWith('/codex-max/')) return '/codex-max';
       return '';
     }
     const basePath = detectBasePath(location.pathname);
@@ -1779,8 +1779,8 @@
     const STORAGE_PREFIX = 'codexMiniChat.v3';
     const GROUPS_STORAGE_KEY = 'codexMini.threadGroups.open.v1';
     const THREAD_NOTICE_STORAGE_KEY = 'codexMini.threadCompleteNotices.v1';
-    const REASONING_OVERRIDE_STORAGE_KEY = 'codexMini.reasoningOverrides.v1';
-    const MODEL_OVERRIDE_STORAGE_KEY = 'codexMini.modelOverrides.v1';
+    const REASONING_OVERRIDE_STORAGE_KEY = 'codexMini.reasoningOverrides.v2';
+    const MODEL_OVERRIDE_STORAGE_KEY = 'codexMini.modelOverrides.v2';
     const ROUTE_BADGE_COMPACT_STORAGE_KEY = 'codexMini.routeBadgeCompact.v1';
     const THREAD_NOTICE_MAX_AGE_MS = 30 * 60 * 1000;
     const THREAD_SPINNER_MS = 850;
@@ -2325,7 +2325,7 @@
           method: 'POST',
           headers: { 'content-type': 'application/json', 'x-mobile-typer-token': token },
           body: JSON.stringify({ threadId: selectedThreadId, target: requestedTarget }),
-          apiTimeoutMs: 20000,
+          apiTimeoutMs: 45000,
           routeSwitchQuiet: true,
           retryProbeTimeoutMs: 900,
         });
@@ -2440,7 +2440,7 @@
           method: 'POST',
           headers: { 'content-type': 'application/json', 'x-mobile-typer-token': token },
           body: JSON.stringify({ threadId: selectedThreadId, target: requestedTarget }),
-          apiTimeoutMs: 20000,
+          apiTimeoutMs: 45000,
           routeSwitchQuiet: true,
           retryProbeTimeoutMs: 900,
         });
@@ -2485,7 +2485,7 @@
       routeBadge.className = `route-badge is-local${routeBadgeCompact ? ' is-compact' : ''}`;
       routeIcon.innerHTML = routeIconMarkup(activeApiKind);
       routeText.textContent = text;
-      routeBadge.title = `当前线路：${text} · Mac 局域网；点击切换显示模式`;
+      routeBadge.title = `当前线路：${text} · 电脑局域网；点击切换显示模式`;
       routeBadge.setAttribute('aria-label', routeBadge.title);
     }
     function toggleRouteBadgeCompact() {
@@ -2648,7 +2648,7 @@
       keepAwakeButton.classList.toggle('is-on', Boolean(keepAwakeEnabled));
       keepAwakeButton.classList.toggle('is-busy', Boolean(keepAwakeBusy));
       const label = keepAwakeEnabled ? '保持亮屏已开启' : '保持亮屏';
-      keepAwakeButton.title = keepAwakeEnabled ? '已阻止这台 Mac 自动休眠，点击关闭' : '阻止这台 Mac 自动休眠和熄屏';
+      keepAwakeButton.title = keepAwakeEnabled ? '已阻止这台电脑自动休眠，点击关闭' : '阻止这台电脑自动休眠和熄屏';
       keepAwakeButton.setAttribute('aria-label', label);
     }
 
@@ -4859,9 +4859,8 @@
       setNotice(options.sendingNotice || (queueBehindActiveRun ? '正在发送到 Codex 队列…' : '正在发送到 Codex…'), 'ok');
       try {
         await ensureRouteForSend();
-        await syncCodexThread(selectedThreadId, { quiet: true, force: true });
       } catch (error) {
-        setNotice(error.message || '同步 Codex 线程失败，已取消发送', 'error');
+        setNotice(error.message || '连接 Codex Max 服务失败，已取消发送', 'error');
         sendButton.disabled = false;
         setWorkingDot(false);
         if (hasTextOverride) restoreLayoutAfterKeyboard();

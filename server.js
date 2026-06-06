@@ -9,22 +9,26 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { URL } = require('url');
 
-const APP_NAME = process.env.CODEX_MINI_APP_NAME || 'Codex Mini';
+const APP_NAME = process.env.CODEX_MAX_APP_NAME || process.env.CODEX_MINI_APP_NAME || 'Codex Max';
 const PORT = Number(process.env.PORT || 8787);
 const HOST = process.env.HOST || '0.0.0.0';
 const TOKEN = process.env.MOBILE_TYPER_TOKEN || crypto.randomBytes(12).toString('base64url');
 const PUBLIC_DIR = path.join(__dirname, 'public');
-const MAX_BODY_BYTES = Number(process.env.CODEX_MINI_MAX_BODY_BYTES || 28 * 1024 * 1024);
+const MAX_BODY_BYTES = Number(process.env.CODEX_MAX_MAX_BODY_BYTES || process.env.CODEX_MINI_MAX_BODY_BYTES || 28 * 1024 * 1024);
 const MAX_TEXT_LENGTH = 8000;
 const MAX_ATTACHMENTS = 6;
-const MAX_ATTACHMENT_BYTES = Number(process.env.CODEX_MINI_MAX_ATTACHMENT_BYTES || 8 * 1024 * 1024);
-const UPLOAD_DIR = path.join(os.tmpdir(), 'codex-mini-uploads');
-const STATE_DIR = process.env.CODEX_MINI_STATE_DIR || path.join(os.homedir(), '.codex-mini');
+const MAX_ATTACHMENT_BYTES = Number(process.env.CODEX_MAX_MAX_ATTACHMENT_BYTES || process.env.CODEX_MINI_MAX_ATTACHMENT_BYTES || 8 * 1024 * 1024);
+const UPLOAD_DIR = path.join(os.tmpdir(), 'codex-max-uploads');
+const STATE_DIR = process.env.CODEX_MAX_STATE_DIR || process.env.CODEX_MINI_STATE_DIR || path.join(os.homedir(), '.codex-max');
 const STATE_FILE = path.join(STATE_DIR, 'state.json');
 
 const CODEX_SESSIONS_DIR = path.join(os.homedir(), '.codex', 'sessions');
 const CODEX_SESSION_INDEX = path.join(os.homedir(), '.codex', 'session_index.jsonl');
-const CODEX_DESKTOP_LOGS_DIR = path.join(os.homedir(), 'Library', 'Logs', 'com.openai.codex');
+const CODEX_DESKTOP_LOGS_DIR = process.platform === 'darwin'
+  ? path.join(os.homedir(), 'Library', 'Logs', 'com.openai.codex')
+  : process.platform === 'win32'
+    ? path.join(os.homedir(), 'AppData', 'Roaming', 'com.openai.codex', 'logs')
+    : path.join(os.homedir(), '.codex', 'logs');
 const CODEX_SESSION_TAIL_BYTES = 5 * 1024 * 1024;
 const CODEX_ACTIVITY_TAIL_BYTES = 512 * 1024;
 const CODEX_ACTIVITY_LOOKBACK_BYTES = CODEX_SESSION_TAIL_BYTES;
@@ -40,11 +44,12 @@ const CODEX_THREAD_SYNC_FRESH_MS = 5000;
 const CODEX_DEEPLINK_SETTLE_MS = 560;
 const CODEX_APP_FOCUS_SETTLE_MS = 100;
 const CODEX_CLICK_SETTLE_MS = 60;
-const TEXT_PASTE_SETTLE_MS = 140;
-const ATTACHMENT_PASTE_SETTLE_MS = 220;
-const CODEX_COMMAND_SETTLE_MS = 180;
-const CODEX_MODEL_COMMAND_SETTLE_MS = 450;
-const CODEX_REASONING_COMMAND_SETTLE_MS = 450;
+const TEXT_PASTE_SETTLE_MS = process.platform === 'win32' ? 180 : 140;
+const ATTACHMENT_PASTE_SETTLE_MS = process.platform === 'win32' ? 520 : 220;
+const CODEX_COMMAND_SETTLE_MS = process.platform === 'win32' ? 220 : 180;
+const CODEX_MODEL_COMMAND_SETTLE_MS = process.platform === 'win32' ? 520 : 450;
+const CODEX_REASONING_COMMAND_SETTLE_MS = process.platform === 'win32' ? 520 : 450;
+const CODEX_SEND_CONFIRM_TIMEOUT_MS = process.platform === 'win32' ? 1800 : 0;
 const CODEX_SESSION_FILE_CACHE_MS = 1200;
 const CODEX_THREAD_LIST_CACHE_MS = 1200;
 const CODEX_HISTORY_INITIAL_TAIL_BYTES = 8 * 1024 * 1024;
@@ -84,55 +89,23 @@ function invalidateCodexThreadListCache() {
 }
 
 function isKeepAwakeActive() {
-  return Boolean(keepAwakeProcess && keepAwakeProcess.exitCode === null && !keepAwakeProcess.killed);
+  return Boolean(platform.keepAwakeStatus().enabled);
 }
 
 function keepAwakeStatus() {
-  return {
-    enabled: isKeepAwakeActive(),
-    startedAt: isKeepAwakeActive() ? keepAwakeStartedAt : '',
-    command: 'caffeinate -dims',
-  };
+  return platform.keepAwakeStatus();
 }
 
 function startKeepAwake() {
-  if (isKeepAwakeActive()) return keepAwakeStatus();
-  const caffeinatePath = '/usr/bin/caffeinate';
-  if (!fs.existsSync(caffeinatePath)) {
-    const error = new Error('这台 Mac 没有找到 caffeinate，无法阻止休眠。');
-    error.code = 'CAFFEINATE_NOT_FOUND';
-    throw error;
-  }
-  const child = spawn(caffeinatePath, ['-dims'], { stdio: 'ignore' });
-  keepAwakeProcess = child;
-  keepAwakeStartedAt = new Date().toISOString();
-  child.on('exit', () => {
-    if (keepAwakeProcess === child) {
-      keepAwakeProcess = null;
-      keepAwakeStartedAt = '';
-    }
-  });
-  child.on('error', () => {
-    if (keepAwakeProcess === child) {
-      keepAwakeProcess = null;
-      keepAwakeStartedAt = '';
-    }
-  });
-  return keepAwakeStatus();
+  return platform.startKeepAwake();
 }
 
 function stopKeepAwake() {
-  const child = keepAwakeProcess;
-  keepAwakeProcess = null;
-  keepAwakeStartedAt = '';
-  if (child && child.exitCode === null && !child.killed) {
-    try { child.kill('SIGTERM'); } catch {}
-  }
-  return keepAwakeStatus();
+  return platform.stopKeepAwake();
 }
 
 function cleanupKeepAwake() {
-  stopKeepAwake();
+  platform.cleanup();
 }
 
 function readCodexConfigText() {
@@ -679,6 +652,18 @@ function codexNewThreadDeepLink(cwd = '') {
   return url.toString();
 }
 
+const platform = require('./src/platform')({
+  rootDir: __dirname,
+  delay,
+  isCodexThreadId,
+  codexThreadDeepLink,
+  codexNewThreadDeepLink,
+  CODEX_DEEPLINK_SETTLE_MS,
+  CODEX_APP_FOCUS_SETTLE_MS,
+  CODEX_CLICK_SETTLE_MS,
+  CODEX_THREAD_SYNC_FRESH_MS,
+});
+
 function readThreadIndex() {
   let stat = null;
   try { stat = fs.statSync(CODEX_SESSION_INDEX); } catch {}
@@ -866,6 +851,33 @@ async function waitForCodexSessionFileForNewSend(options = {}, timeoutMs = 2600)
     await delay(220);
   }
   return findCodexSessionFileForNewSend(options);
+}
+
+function sessionHasUserMessage(file, text, sinceMs = 0) {
+  if (!file || !fs.existsSync(file)) return false;
+  const target = normalizeComparableMessage(text);
+  if (!target) return false;
+  const items = readJsonlTailObjects(file, CODEX_SESSION_TAIL_BYTES);
+  for (const item of items) {
+    const payload = item.payload || {};
+    if (item.type !== 'event_msg' || payload.type !== 'user_message') continue;
+    const itemTime = Date.parse(item.timestamp || '') || 0;
+    if (sinceMs && itemTime && itemTime < sinceMs - 1200) continue;
+    const message = normalizeComparableMessage(payload.message || '');
+    if (!message) continue;
+    if (message === target || message.includes(target) || target.includes(message)) return true;
+  }
+  return false;
+}
+
+async function waitForUserMessageInSession(file, text, sinceMs = 0, timeoutMs = CODEX_SEND_CONFIRM_TIMEOUT_MS) {
+  if (!timeoutMs || !file || !String(text || '').trim()) return true;
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() <= deadline) {
+    if (sessionHasUserMessage(file, text, sinceMs)) return true;
+    await delay(180);
+  }
+  return false;
 }
 
 function readJsonlTailObjects(file, maxBytes) {
@@ -1998,6 +2010,27 @@ function runProcess(command, args, input) {
 function explainAutomationError(error) {
   const raw = String(error && (error.stderr || error.message) || '');
   const lower = raw.toLowerCase();
+  if (process.platform === 'win32') {
+    if (lower.includes('codex') || lower.includes('window') || lower.includes('窗口') || lower.includes('start-process')) {
+      return {
+        code: 'CODEX_WINDOW_NOT_READY',
+        message: 'Windows 没能激活 Codex Desktop。请确认 Codex Desktop 已安装、已登录，并且 codex:// 协议能从运行服务的这个桌面会话打开。',
+        detail: raw,
+      };
+    }
+    if (lower.includes('clipboard') || lower.includes('剪贴板')) {
+      return {
+        code: 'WINDOWS_CLIPBOARD_FAILED',
+        message: 'Windows 剪贴板写入失败。请确认当前桌面没有其他程序长时间占用剪贴板，然后重试。',
+        detail: raw,
+      };
+    }
+    return {
+      code: 'WINDOWS_AUTOMATION_FAILED',
+      message: 'Windows 自动粘贴失败。请确认 Codex Desktop 正在当前用户桌面运行，且服务不是在锁屏、UAC 或非交互会话里运行。',
+      detail: raw,
+    };
+  }
   if (lower.includes('assistive') || lower.includes('accessibility') || lower.includes('-25211') || lower.includes('not allowed') || lower.includes('not authorized')) {
     return {
       code: 'ACCESSIBILITY_PERMISSION_REQUIRED',
@@ -2015,6 +2048,13 @@ function explainAutomationError(error) {
 function explainTargetError(error, target) {
   const raw = String(error && (error.stderr || error.message) || '');
   if (target === 'codex') {
+    if (process.platform === 'win32') {
+      return {
+        code: 'CODEX_FOCUS_FAILED',
+        message: '已经收到文字，但没能自动聚焦 Codex 输入框。请确认 Codex Desktop 正在当前 Windows 桌面运行，且服务不是在锁屏或非交互会话里运行。',
+        detail: raw,
+      };
+    }
     return {
       code: 'CODEX_FOCUS_FAILED',
       message: '已经收到文字，但没能自动聚焦 Codex 输入框。请确认 Codex 正在运行，且当前终端已开启辅助功能权限。',
@@ -2025,18 +2065,7 @@ function explainTargetError(error, target) {
 }
 
 async function copyTextToClipboard(text) {
-  // pbcopy can silently write to no visible pasteboard when this service runs
-  // as a LaunchAgent. AppleScript targets the logged-in user's desktop
-  // pasteboard, matching the existing image clipboard path. Use a temp UTF-8
-  // file instead of embedding text in the AppleScript command, so Chinese,
-  // newlines, quotes and longer messages survive unchanged.
-  const filePath = path.join(os.tmpdir(), `codex-mini-clipboard-${process.pid}-${Date.now()}-${crypto.randomBytes(4).toString('hex')}.txt`);
-  fs.writeFileSync(filePath, String(text || ''), 'utf8');
-  try {
-    await runProcess('/usr/bin/osascript', ['-e', `set the clipboard to (read (POSIX file "${appleScriptString(filePath)}") as «class utf8»)`]);
-  } finally {
-    fs.rmSync(filePath, { force: true });
-  }
+  return platform.copyTextToClipboard(text);
 }
 
 function getClickTool() {
@@ -2057,79 +2086,38 @@ function delay(ms) {
 }
 
 function hasFreshCodexThreadActivation(threadId) {
-  return Boolean(
-    isCodexThreadId(threadId) &&
-    lastCodexThreadActivation.threadId === threadId &&
-    Date.now() - lastCodexThreadActivation.at <= CODEX_THREAD_SYNC_FRESH_MS
-  );
+  return false;
 }
 
 async function focusTarget(target, threadId = '', options = {}) {
-  if (target !== 'codex') return;
+  return platform.focusTarget(target, threadId, options);
+}
 
-  await activateCodexThread(threadId, { allowCached: Boolean(options.assumeThreadSynced) });
-  if (options.skipComposerClick) return;
-
-  const pointTool = path.join(__dirname, 'bin', 'codex-window-point');
-  if (!fs.existsSync(pointTool)) throw new Error(`Codex window point helper not found: ${pointTool}`);
-  const { stdout } = await runProcess(pointTool, []);
-  const point = stdout.trim();
-  if (!/^-?\d+,-?\d+$/.test(point)) throw new Error(`Invalid Codex click point: ${point}`);
-
-  const clickTool = getClickTool();
-  if (clickTool) {
-    await runProcess(clickTool, [`c:${toCliclickAbsolutePoint(point)}`]);
-  } else {
-    const fallbackClick = `tell application "System Events" to click at {${point}}`;
-    await runProcess('osascript', ['-e', fallbackClick]);
+function codexFocusOptions(threadId = '', options = {}) {
+  if (process.platform !== 'win32') return options;
+  const normalized = {
+    ...options,
+    skipComposerClick: options.forceComposerClick === true ? false : true,
+  };
+  if (
+    isCodexThreadId(threadId) &&
+    (options.bounceViaNewThread === true || process.env.CODEX_MAX_WIN32_ALWAYS_NEW_THREAD_BOUNCE === '1' || process.env.CODEX_MINI_WIN32_ALWAYS_NEW_THREAD_BOUNCE === '1')
+  ) {
+    return { ...normalized, bounceViaNewThread: true };
   }
-  await delay(CODEX_CLICK_SETTLE_MS);
+  return normalized;
 }
 
 async function activateCodexThread(threadId = '', options = {}) {
-  if (options.allowCached && hasFreshCodexThreadActivation(threadId)) {
-    await runProcess('open', ['-b', 'com.openai.codex']);
-    await delay(CODEX_APP_FOCUS_SETTLE_MS);
-    return;
-  }
-
-  const deepLink = codexThreadDeepLink(threadId);
-  if (deepLink) {
-    await runProcess('open', [deepLink]);
-    // Give the Electron router time to replace the visible conversation before
-    // we click the composer or paste.
-    await delay(CODEX_DEEPLINK_SETTLE_MS);
-  }
-  await runProcess('open', ['-b', 'com.openai.codex']);
-  await delay(CODEX_APP_FOCUS_SETTLE_MS);
-  if (isCodexThreadId(threadId)) lastCodexThreadActivation = { threadId, at: Date.now() };
+  return platform.activateCodexThread(threadId, options);
 }
 
 async function activateNewCodexThread(cwd = '') {
-  const deepLink = codexNewThreadDeepLink(cwd);
-  await runProcess('open', [deepLink]);
-  await delay(CODEX_DEEPLINK_SETTLE_MS + 180);
-  await runProcess('open', ['-b', 'com.openai.codex']);
-  await delay(CODEX_APP_FOCUS_SETTLE_MS);
-  lastCodexThreadActivation = { threadId: '', at: 0 };
+  return platform.activateNewCodexThread(cwd);
 }
 
 async function activateNewProjectlessCodexThread(anchorThreadId = '') {
-  // `codex://threads/new` without a path can inherit Codex Desktop's last
-  // active project. To create a real “Chats/对话” thread, first navigate to an
-  // existing projectless thread and then invoke Codex's own New Chat command;
-  // Codex checks the current thread's project kind and starts with
-  // `activeProject: null` for projectless chats.
-  if (isCodexThreadId(anchorThreadId)) {
-    await activateCodexThread(anchorThreadId);
-    await pressCodexShortcut('n', ['command']);
-    await delay(CODEX_DEEPLINK_SETTLE_MS + 180);
-  } else {
-    await activateNewCodexThread('');
-  }
-  await runProcess('open', ['-b', 'com.openai.codex']);
-  await delay(CODEX_APP_FOCUS_SETTLE_MS);
-  lastCodexThreadActivation = { threadId: '', at: 0 };
+  return platform.activateNewProjectlessCodexThread(anchorThreadId);
 }
 
 function validLocalDirectory(value) {
@@ -2279,25 +2267,11 @@ function appleScriptString(value) {
 }
 
 async function copyImageToClipboard(file) {
-  const quoted = appleScriptString(file.filePath);
-  let typeExpr = '«class PNGf»';
-  if (file.mime === 'image/jpeg') typeExpr = 'JPEG picture';
-  else if (file.mime === 'image/gif') typeExpr = 'GIF picture';
-  else if (file.mime !== 'image/png') {
-    // For less common formats, paste the file reference; many Electron inputs accept it as an attachment.
-    await runProcess('osascript', ['-e', `set the clipboard to (POSIX file "${quoted}")`]);
-    return;
-  }
-  await runProcess('osascript', ['-e', `set the clipboard to (read (POSIX file "${quoted}") as ${typeExpr})`]);
+  return platform.copyImageToClipboard(file);
 }
 
 async function pressPaste() {
-  const script = `
-    tell application "System Events"
-      keystroke "v" using command down
-    end tell
-  `;
-  await runProcess('osascript', ['-e', script]);
+  return platform.pressPaste();
 }
 
 async function pressPasteAndEnter() {
@@ -2312,48 +2286,82 @@ async function pressPasteAndEnter() {
   await pressEnter();
 }
 
+async function typeTextAndEnter(text) {
+  if (platform.typeText) {
+    await platform.typeText(text);
+    await delay(TEXT_PASTE_SETTLE_MS);
+    await pressEnter();
+    return;
+  }
+  await copyTextToClipboard(text);
+  await pressPasteAndEnter();
+}
+
+async function pasteTextAndEnter(text) {
+  if (platform.pasteTextAndEnter) {
+    await platform.pasteTextAndEnter(text);
+    return;
+  }
+  await copyTextToClipboard(text);
+  await pressPasteAndEnter();
+}
+
+async function pasteCodexCommandSelection(command, selection, options = {}) {
+  if (platform.runCodexCommandSelection) {
+    await platform.runCodexCommandSelection(command, selection, options);
+    return;
+  }
+  await pasteTextAndEnter(command);
+  await delay(options.commandSettleMs || CODEX_COMMAND_SETTLE_MS);
+  await pasteTextAndEnter(selection);
+  await delay(options.selectionSettleMs || CODEX_COMMAND_SETTLE_MS);
+}
+
 async function pressEnter() {
-  await runProcess('osascript', ['-e', 'tell application "System Events" to key code 36']);
+  return platform.pressEnter();
 }
 
 async function pressCodexShortcut(key, modifiers = []) {
-  const modifierExpr = modifiers.length ? ` using {${modifiers.map(item => `${item} down`).join(', ')}}` : '';
-  const script = `
-    tell application "System Events"
-      keystroke "${appleScriptString(key)}"${modifierExpr}
-    end tell
-  `;
-  await runProcess('osascript', ['-e', script]);
+  return platform.pressCodexShortcut(key, modifiers);
 }
 
 async function pressCancelCodexResponse() {
-  const script = `
-    tell application "System Events"
-      key code 53
-      delay 0.08
-      keystroke "." using command down
-    end tell
-  `;
-  await runProcess('osascript', ['-e', script]);
+  return platform.pressCancelCodexResponse();
 }
 
 
 async function pasteAndEnter(text, target = 'frontmost', attachments = [], threadId = '', options = {}) {
-  await focusTarget(target, threadId, options);
-
-  for (const attachment of attachments) {
-    await copyImageToClipboard(attachment);
-    await pressPaste();
-    await delay(ATTACHMENT_PASTE_SETTLE_MS);
+  if (process.platform === 'win32' && target === 'codex') {
+    return platform.runExclusive(async () => {
+      for (const attachment of attachments) {
+        await copyImageToClipboard(attachment);
+        await pressPaste();
+        await delay(ATTACHMENT_PASTE_SETTLE_MS);
+      }
+      if (text) {
+        await pasteTextAndEnter(text);
+        return;
+      }
+      await pressEnter();
+    });
   }
 
-  if (text) {
-    await copyTextToClipboard(text);
-    await pressPasteAndEnter();
-    return;
-  }
+  return platform.withClipboardPreserved(async () => {
+    await focusTarget(target, threadId, target === 'codex' ? codexFocusOptions(threadId, options) : options);
 
-  await pressEnter();
+    for (const attachment of attachments) {
+      await copyImageToClipboard(attachment);
+      await pressPaste();
+      await delay(ATTACHMENT_PASTE_SETTLE_MS);
+    }
+
+    if (text) {
+      await pasteTextAndEnter(text);
+      return;
+    }
+
+    await pressEnter();
+  });
 }
 
 function modelSwitchTargetForCurrent(current = {}, requestedTarget = '') {
@@ -2378,24 +2386,48 @@ async function switchCodexGuiModel(threadId = '', targetKey = '') {
     throw error;
   }
   const file = threadId ? findCodexSessionFileByThreadId(threadId) : findLatestCodexSessionFile();
+  const targetThreadId = threadId || (file ? threadIdFromSessionFile(file) : '');
   const current = file ? currentModelFromItems(readJsonlTailObjects(file, CODEX_SESSION_TAIL_BYTES)) : modelInfoFromId('');
   const target = modelSwitchTargetForCurrent(current, targetKey);
 
-  await focusTarget('codex', threadId);
-  await copyTextToClipboard('/模型');
-  await pressPasteAndEnter();
-  await delay(CODEX_MODEL_COMMAND_SETTLE_MS);
-  await copyTextToClipboard(target.displayName);
-  await pressPasteAndEnter();
-  await delay(CODEX_COMMAND_SETTLE_MS);
+  if (process.platform === 'win32') {
+    await platform.runExclusive(async () => {
+      await pasteCodexCommandSelection('/模型', target.displayName, {
+        commandSettleMs: CODEX_MODEL_COMMAND_SETTLE_MS,
+        selectionSettleMs: CODEX_COMMAND_SETTLE_MS,
+        timeoutMs: 10000,
+      });
+    });
+    return {
+      ok: true,
+      verified: false,
+      threadId: targetThreadId,
+      currentModel: current,
+      targetModel: { ...target, available: true, updatedAt: new Date().toISOString() },
+      focusFallback: '',
+      message: `已向 Codex 发送模型切换命令：${target.displayName}`,
+    };
+  }
 
-  return {
-    ok: true,
-    threadId,
-    currentModel: current,
-    targetModel: { ...target, available: true, updatedAt: new Date().toISOString() },
-    message: `已切换到 ${target.displayName}`,
-  };
+  return platform.withClipboardPreserved(async () => {
+    await focusTarget('codex', targetThreadId, codexFocusOptions(targetThreadId));
+    await pasteCodexCommandSelection('/模型', target.displayName, {
+      commandSettleMs: CODEX_MODEL_COMMAND_SETTLE_MS,
+      selectionSettleMs: CODEX_COMMAND_SETTLE_MS,
+      timeoutMs: 10000,
+    });
+    const verifiedToolbar = await verifyWindowsToolbarSwitch('model', target);
+    return {
+      ok: true,
+      verified: true,
+      threadId: targetThreadId,
+      currentModel: current,
+      targetModel: { ...target, available: true, updatedAt: new Date().toISOString() },
+      toolbar: verifiedToolbar || undefined,
+      focusFallback: '',
+      message: `已切换到 ${target.displayName}`,
+    };
+  });
 }
 
 function reasoningModeTargetForCurrent(current = {}, requestedTarget = '') {
@@ -2407,6 +2439,44 @@ function reasoningModeTargetForCurrent(current = {}, requestedTarget = '') {
   return REASONING_MODE_TARGETS[nextKey] || REASONING_MODE_TARGETS.medium;
 }
 
+function createSwitchVerificationError(kind, expected, actual = {}) {
+  const raw = actual && actual.raw ? `当前 Codex 显示为 ${actual.raw}` : '没有读到 Codex 底部模型/推理状态';
+  const label = kind === 'model' ? '模型' : '推理模式';
+  const error = new Error(`${label}没有实际切换成功，${raw}。`);
+  error.status = 409;
+  error.code = kind === 'model' ? 'MODEL_SWITCH_NOT_APPLIED' : 'REASONING_SWITCH_NOT_APPLIED';
+  error.actual = actual;
+  error.expected = expected;
+  return error;
+}
+
+function modelLabelsMatch(expected = {}, actualLabel = '') {
+  const actual = String(actualLabel || '').trim().toLowerCase();
+  if (!actual) return false;
+  const candidates = [
+    expected.label,
+    expected.displayName,
+    expected.id,
+    expected.key,
+    labelFromModelName(expected.displayName || expected.id || expected.key || ''),
+  ]
+    .map(value => String(value || '').trim().toLowerCase())
+    .filter(Boolean);
+  return candidates.some(value => value === actual || value.includes(actual) || actual.includes(value));
+}
+
+async function verifyWindowsToolbarSwitch(kind, target) {
+  if (process.platform !== 'win32' || !platform.getToolbarState) return null;
+  let state = null;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    await delay(attempt ? 350 : 180);
+    state = await platform.getToolbarState();
+    if (kind === 'reasoning' && state && state.reasoningLabel === target.displayName) return state;
+    if (kind === 'model' && state && modelLabelsMatch(target, state.modelLabel)) return state;
+  }
+  throw createSwitchVerificationError(kind, target, state);
+}
+
 async function switchCodexReasoningMode(threadId = '', targetKey = '') {
   if (threadId && !isCodexThreadId(threadId)) {
     const error = new Error('线程 ID 不正确。');
@@ -2415,80 +2485,108 @@ async function switchCodexReasoningMode(threadId = '', targetKey = '') {
     throw error;
   }
   const file = threadId ? findCodexSessionFileByThreadId(threadId) : findLatestCodexSessionFile();
+  const targetThreadId = threadId || (file ? threadIdFromSessionFile(file) : '');
   const current = file ? currentReasoningModeFromItems(readJsonlTailObjects(file, CODEX_SESSION_TAIL_BYTES)) : reasoningModeFromValue('');
   const target = reasoningModeTargetForCurrent(current, targetKey);
 
-  await focusTarget('codex', threadId);
-  await copyTextToClipboard('/推理模式');
-  await pressPasteAndEnter();
-  await delay(CODEX_REASONING_COMMAND_SETTLE_MS);
-  await copyTextToClipboard(target.displayName);
-  await pressPasteAndEnter();
-  await delay(CODEX_COMMAND_SETTLE_MS);
+  if (process.platform === 'win32') {
+    await platform.runExclusive(async () => {
+      await pasteCodexCommandSelection('/推理模式', target.displayName, {
+        commandSettleMs: CODEX_REASONING_COMMAND_SETTLE_MS,
+        selectionSettleMs: CODEX_COMMAND_SETTLE_MS,
+        timeoutMs: 10000,
+      });
+    });
+    return {
+      ok: true,
+      verified: false,
+      threadId: targetThreadId,
+      currentReasoningMode: current,
+      targetReasoningMode: { ...target, available: true, updatedAt: new Date().toISOString() },
+      focusFallback: '',
+      message: `已向 Codex 发送推理模式切换命令：${target.displayName}`,
+    };
+  }
 
-  return {
-    ok: true,
-    threadId,
-    currentReasoningMode: current,
-    targetReasoningMode: { ...target, available: true, updatedAt: new Date().toISOString() },
-    message: `已切换推理模式为 ${target.displayName}`,
-  };
+  return platform.withClipboardPreserved(async () => {
+    await focusTarget('codex', targetThreadId, codexFocusOptions(targetThreadId));
+    await pasteCodexCommandSelection('/推理模式', target.displayName, {
+      commandSettleMs: CODEX_REASONING_COMMAND_SETTLE_MS,
+      selectionSettleMs: CODEX_COMMAND_SETTLE_MS,
+      timeoutMs: 10000,
+    });
+    const verifiedToolbar = await verifyWindowsToolbarSwitch('reasoning', target);
+    return {
+      ok: true,
+      verified: true,
+      threadId: targetThreadId,
+      currentReasoningMode: current,
+      targetReasoningMode: { ...target, available: true, updatedAt: new Date().toISOString() },
+      toolbar: verifiedToolbar || undefined,
+      focusFallback: '',
+      message: `已切换推理模式为 ${target.displayName}`,
+    };
+  });
 }
 
 async function stopCodexResponse(threadId = '') {
-  await focusTarget('codex', threadId);
-  await pressCancelCodexResponse();
+  return platform.runExclusive(async () => {
+    await focusTarget('codex', threadId, codexFocusOptions(threadId));
+    await pressCancelCodexResponse();
+  });
 }
 
 async function runCodexThreadCommand(threadId, command, options = {}) {
-  if (threadId && !isCodexThreadId(threadId)) {
-    const error = new Error('线程 ID 不正确。');
+  return platform.withClipboardPreserved(async () => {
+    if (threadId && !isCodexThreadId(threadId)) {
+      const error = new Error('线程 ID 不正确。');
+      error.status = 400;
+      error.code = 'BAD_THREAD_ID';
+      throw error;
+    }
+    await activateCodexThread(threadId);
+
+    if (command === 'archive') {
+      await pressCodexShortcut('a', ['command', 'shift']);
+      await delay(CODEX_COMMAND_SETTLE_MS);
+      return { message: '已归档当前 Codex 线程。' };
+    }
+
+    if (command === 'pin') {
+      await pressCodexShortcut('p', ['command', 'option']);
+      await delay(CODEX_COMMAND_SETTLE_MS);
+      return { message: options.pinned ? '已置顶当前 Codex 线程。' : '已取消置顶当前 Codex 线程。' };
+    }
+
+    if (command === 'rename') {
+      const name = String(options.name || '').replace(/\s+/g, ' ').trim();
+      if (!name) {
+        const error = new Error('新名称不能为空。');
+        error.status = 400;
+        error.code = 'EMPTY_THREAD_NAME';
+        throw error;
+      }
+      if (name.length > 120) {
+        const error = new Error('新名称太长，请控制在 120 个字符以内。');
+        error.status = 400;
+        error.code = 'THREAD_NAME_TOO_LONG';
+        throw error;
+      }
+      await pressCodexShortcut('r', ['command', 'option']);
+      await delay(CODEX_COMMAND_SETTLE_MS);
+      await copyTextToClipboard(name);
+      await pressPaste();
+      await delay(120);
+      await pressEnter();
+      await delay(CODEX_COMMAND_SETTLE_MS);
+      return { message: '已重命名当前 Codex 线程。', name };
+    }
+
+    const error = new Error('不支持的线程操作。');
     error.status = 400;
-    error.code = 'BAD_THREAD_ID';
+    error.code = 'BAD_THREAD_ACTION';
     throw error;
-  }
-  await activateCodexThread(threadId);
-
-  if (command === 'archive') {
-    await pressCodexShortcut('a', ['command', 'shift']);
-    await delay(CODEX_COMMAND_SETTLE_MS);
-    return { message: '已归档当前 Codex 线程。' };
-  }
-
-  if (command === 'pin') {
-    await pressCodexShortcut('p', ['command', 'option']);
-    await delay(CODEX_COMMAND_SETTLE_MS);
-    return { message: options.pinned ? '已置顶当前 Codex 线程。' : '已取消置顶当前 Codex 线程。' };
-  }
-
-  if (command === 'rename') {
-    const name = String(options.name || '').replace(/\s+/g, ' ').trim();
-    if (!name) {
-      const error = new Error('新名称不能为空。');
-      error.status = 400;
-      error.code = 'EMPTY_THREAD_NAME';
-      throw error;
-    }
-    if (name.length > 120) {
-      const error = new Error('新名称太长，请控制在 120 个字符以内。');
-      error.status = 400;
-      error.code = 'THREAD_NAME_TOO_LONG';
-      throw error;
-    }
-    await pressCodexShortcut('r', ['command', 'option']);
-    await delay(CODEX_COMMAND_SETTLE_MS);
-    await copyTextToClipboard(name);
-    await pressPaste();
-    await delay(80);
-    await pressEnter();
-    await delay(CODEX_COMMAND_SETTLE_MS);
-    return { message: '已重命名当前 Codex 线程。', name };
-  }
-
-  const error = new Error('不支持的线程操作。');
-  error.status = 400;
-  error.code = 'BAD_THREAD_ACTION';
-  throw error;
+  });
 }
 
 async function handleThreadAction(req, res) {
@@ -2587,7 +2685,7 @@ async function handleModelSwitch(req, res) {
       return json(res, error.status, { ok: false, code: error.code || 'BAD_REQUEST', message: error.message || '切换模型失败。' });
     }
     const explained = explainTargetError(error, 'codex');
-    return json(res, 500, { ok: false, ...explained, message: '没能通过 Codex GUI 切换模型。请确认 Codex 正在运行，且辅助功能权限正常。' });
+    return json(res, 500, { ok: false, ...explained, message: '没能通过 Codex GUI 切换模型。请确认 Codex Desktop 正在运行，且当前系统的自动化权限正常。' });
   }
 }
 
@@ -2613,7 +2711,7 @@ async function handleReasoningMode(req, res) {
       return json(res, error.status, { ok: false, code: error.code || 'BAD_REQUEST', message: error.message || '切换推理模式失败。' });
     }
     const explained = explainTargetError(error, 'codex');
-    return json(res, 500, { ok: false, ...explained, message: '没能通过 Codex GUI 切换推理模式。请确认 Codex 正在运行，且辅助功能权限正常。' });
+    return json(res, 500, { ok: false, ...explained, message: '没能通过 Codex GUI 切换推理模式。请确认 Codex Desktop 正在运行，且当前系统的自动化权限正常。' });
   }
 }
 
@@ -2635,7 +2733,9 @@ async function handleSend(req, res) {
   const selectedThreadId = typeof payload.threadId === 'string' ? payload.threadId : '';
   const assumeThreadSynced = payload.assumeThreadSynced === true;
   const expectNewThread = payload.expectNewThread === true && target === 'codex' && !selectedThreadId;
-  const directPasteWithoutClick = payload.directPasteWithoutClick === true && expectNewThread;
+  const directPasteWithoutClick = process.platform === 'win32' && target === 'codex'
+    ? payload.forceComposerClick !== true
+    : payload.directPasteWithoutClick === true && expectNewThread;
   const previousThreadId = isCodexThreadId(payload.previousThreadId) ? payload.previousThreadId : '';
   const expectedNewThreadCwd = validLocalDirectory(typeof payload.expectedCwd === 'string' ? payload.expectedCwd : '');
   const clientRequestId = normalizeClientRequestId(payload.clientRequestId);
@@ -2686,7 +2786,9 @@ async function handleSend(req, res) {
         watch,
       });
     }
-    await pasteAndEnter(text, target, attachments, selectedThreadId, { assumeThreadSynced, skipComposerClick: directPasteWithoutClick });
+    const effectiveThreadId = selectedThreadId || (watchFile ? threadIdFromSessionFile(watchFile) : '');
+    const sendOptions = { assumeThreadSynced, expectNewThread, skipComposerClick: directPasteWithoutClick };
+    await pasteAndEnter(text, target, attachments, effectiveThreadId, sendOptions);
     if (expectNewThread && watch) {
       const newSessionFile = await waitForCodexSessionFileForNewSend({
         sinceMs: watchSinceMs,
@@ -2711,6 +2813,7 @@ async function handleSend(req, res) {
       sentAt: new Date().toISOString(),
       attachments: attachments.map(item => ({ name: item.name, size: item.size, type: item.mime })),
       watch,
+      focusFallback: '',
     };
     if (clientRequestId) {
       recentSendRequests.set(clientRequestId, {
@@ -2774,7 +2877,7 @@ function handleClientConfig(req, res) {
   if (!isAuthorized(req)) return json(res, 401, { ok: false, code: 'UNAUTHORIZED', message: '访问令牌不正确。' });
   return json(res, 200, {
     ok: true,
-    service: 'codex-mini',
+    service: 'codex-max',
     appName: APP_NAME,
     localOnly: true,
     localApiBases: getLanApiBases(),
@@ -2786,8 +2889,9 @@ function handleHealth(req, res) {
   if (!isAuthorized(req)) return json(res, 401, { ok: false, code: 'UNAUTHORIZED', message: '访问令牌不正确。' });
   return json(res, 200, {
     ok: true,
-    service: 'codex-mini',
+    service: 'codex-max',
     host: os.hostname(),
+    platform: platform.name,
     now: new Date().toISOString(),
   });
 }
@@ -2807,11 +2911,11 @@ async function handleKeepAwake(req, res) {
 
   try {
     const enabled = payload.enabled === true;
-    const status = enabled ? startKeepAwake() : stopKeepAwake();
+    const status = await (enabled ? startKeepAwake() : stopKeepAwake());
     return json(res, 200, {
       ok: true,
       ...status,
-      message: status.enabled ? '已开启保持亮屏，Mac 不会自动休眠' : '已关闭保持亮屏',
+      message: status.enabled ? '已开启保持亮屏，电脑不会自动休眠' : '已关闭保持亮屏',
     });
   } catch (error) {
     return json(res, 500, {
@@ -2857,9 +2961,9 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, HOST, () => {
   const urls = getLanUrls();
   console.log('\nCodex mini is running.');
-  console.log('Keep this terminal open, put your Mac cursor where you want text, then open one of these URLs on your phone:');
+  console.log('Keep this terminal open, make sure Codex Desktop is available, then open one of these URLs on your phone:');
   for (const url of urls) console.log(`  ${url}`);
-  console.log('\nTip: phone and Mac must be on the same Wi‑Fi. Press Ctrl+C to stop.\n');
+  console.log('\nTip: phone and this computer must be on the same Wi‑Fi/LAN. Press Ctrl+C to stop.\n');
 });
 
 process.on('exit', cleanupKeepAwake);
