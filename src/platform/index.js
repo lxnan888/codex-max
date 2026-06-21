@@ -1,9 +1,1 @@
-'use strict';
-
-module.exports = function createPlatform(env) {
-  if (process.platform === 'win32') return require('./win32')(env);
-  if (process.platform === 'darwin') return require('./darwin')(env);
-  const error = new Error(`Codex Max 暂不支持当前系统：${process.platform}`);
-  error.code = 'UNSUPPORTED_PLATFORM';
-  throw error;
-};
+J3VzZSBzdHJpY3QnOwoKbW9kdWxlLmV4cG9ydHMgPSBmdW5jdGlvbiBjcmVhdGVQbGF0Zm9ybShlbnYpIHsKICBpZiAocHJvY2Vzcy5wbGF0Zm9ybSA9PT0gJ3dpbjMyJykgcmV0dXJuIHJlcXVpcmUoJy4vd2luMzInKShlbnYpOwogIGNvbnN0IGVycm9yID0gbmV3IEVycm9yKGBDb2RleCBNYXggVlNDb2RlIOacrOWcsOeJiOWPquaUr+aMgSBXaW5kb3dz77yM5b2T5YmN57O757uf5pivICR7cHJvY2Vzcy5wbGF0Zm9ybX3jgIJgKTsKICBlcnJvci5jb2RlID0gJ1VOU1VQUE9SVEVEX1BMQVRGT1JNJzsKICB0aHJvdyBlcnJvcjsKfTsK

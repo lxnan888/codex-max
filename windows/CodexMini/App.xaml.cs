@@ -1,7 +1,1 @@
-using System.Windows;
-
-namespace CodexMiniWin;
-
-public partial class App : System.Windows.Application
-{
-}
+dXNpbmcgU3lzdGVtLldpbmRvd3M7CgpuYW1lc3BhY2UgQ29kZXhNaW5pV2luOwoKcHVibGljIHBhcnRpYWwgY2xhc3MgQXBwIDogU3lzdGVtLldpbmRvd3MuQXBwbGljYXRpb24Kewp9Cg==

@@ -1,14 +1,1 @@
-{
-  "scripts": {
-    "start": "node server.js",
-    "check": "node --check server.js"
-  },
-  "dependencies": {},
-  "devDependencies": {},
-  "engines": {
-    "node": ">=18"
-  },
-  "name": "codex-max",
-  "version": "3.0.5",
-  "description": "Local phone-to-Codex Desktop bridge with Windows MVP support"
-}
+ewogICJzY3JpcHRzIjogewogICAgInN0YXJ0IjogIm5vZGUgc2VydmVyLmpzIiwKICAgICJjaGVjayI6ICJub2RlIC0tY2hlY2sgc2VydmVyLmpzIgogIH0sCiAgImRlcGVuZGVuY2llcyI6IHt9LAogICJkZXZEZXBlbmRlbmNpZXMiOiB7fSwKICAiZW5naW5lcyI6IHsKICAgICJub2RlIjogIj49MTgiCiAgfSwKICAibmFtZSI6ICJjb2RleC1tYXgiLAogICJ2ZXJzaW9uIjogIjMuMS4wIiwKICAiZGVzY3JpcHRpb24iOiAiTG9jYWwgVlNDb2RlIENvZGV4IENEUCBjb250cm9sbGVyIGZvciBXaW5kb3dzIgp9Cg==
