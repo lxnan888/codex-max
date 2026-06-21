@@ -1,1 +1,7 @@
-PEFwcGxpY2F0aW9uIHg6Q2xhc3M9IkNvZGV4TWluaVdpbi5BcHAiCiAgICAgICAgICAgICB4bWxucz0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93aW5meC8yMDA2L3hhbWwvcHJlc2VudGF0aW9uIgogICAgICAgICAgICAgeG1sbnM6eD0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93aW5meC8yMDA2L3hhbWwiCiAgICAgICAgICAgICBTdGFydHVwVXJpPSJNYWluV2luZG93LnhhbWwiPgogICAgPEFwcGxpY2F0aW9uLlJlc291cmNlcz4KICAgIDwvQXBwbGljYXRpb24uUmVzb3VyY2VzPgo8L0FwcGxpY2F0aW9uPgo=
+<Application x:Class="CodexMiniWin.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+    </Application.Resources>
+</Application>

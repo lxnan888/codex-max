@@ -1,1 +1,8 @@
-J3VzZSBzdHJpY3QnOwoKbW9kdWxlLmV4cG9ydHMgPSBmdW5jdGlvbiBjcmVhdGVQbGF0Zm9ybShlbnYpIHsKICBpZiAocHJvY2Vzcy5wbGF0Zm9ybSA9PT0gJ3dpbjMyJykgcmV0dXJuIHJlcXVpcmUoJy4vd2luMzInKShlbnYpOwogIGNvbnN0IGVycm9yID0gbmV3IEVycm9yKGBDb2RleCBNYXggVlNDb2RlIOacrOWcsOeJiOWPquaUr+aMgSBXaW5kb3dz77yM5b2T5YmN57O757uf5pivICR7cHJvY2Vzcy5wbGF0Zm9ybX3jgIJgKTsKICBlcnJvci5jb2RlID0gJ1VOU1VQUE9SVEVEX1BMQVRGT1JNJzsKICB0aHJvdyBlcnJvcjsKfTsK
+'use strict';
+
+module.exports = function createPlatform(env) {
+  if (process.platform === 'win32') return require('./win32')(env);
+  const error = new Error(`Codex Max VSCode 本地版只支持 Windows，当前系统是 ${process.platform}。`);
+  error.code = 'UNSUPPORTED_PLATFORM';
+  throw error;
+};

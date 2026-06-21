@@ -1,1 +1,18 @@
-IyBDb2RleCBNYXggV2luZG93cyDlkK/liqjlmagKCui/meS4quebruW9leWMheWQqyBXaW5kb3dzIFdQRiDlkK/liqjlmajjgILlkK/liqjlmajlj6rnrqHnkIbmnKzlnLAgVlMgQ29kZSBDb2RleCDmj5Lku7bmjqfliLbmnI3liqHvvJoKCi0g5YeG5aSH5pys5Zyw5pyN5YqhIHBheWxvYWQKLSDlkK/liqjjgIHlgZzmraLjgIHph43lkK8gTm9kZSDmnI3liqEKLSDmmL7npLogQ0RQIOeKtuaAgeOAgeerr+WPo+OAgeS8muivneaVsOmHj+WSjOaXpeW/l+WFpeWPowotIOaJk+W8gOaIluWkjeWItiBgaHR0cDovLzEyNy4wLjAuMTo4Nzg3L2AKLSDpgInmi6nmnIDov5HmnKzlnLDnm67lvZXmiJYgU1NIIOW3peS9nOWMugotIOaLiei1tyBgLS1yZW1vdGUtZGVidWdnaW5nLXBvcnQ9OTMzOWAg55qE5Y+X5o6nIFZTIENvZGUKCuWug+S4jei0n+i0oyBDb2RleCBBcHAvQ29kZXggRGVza3RvcOOAgW1hY09T44CB5Y2h5a+G6aqM6K+B44CB6L+c56iL6K6/6Zeu5oiW57O757uf57qnIEdVSSDlm57pgIDjgIIKCuaehOW7uuWNleaWh+S7tiBleGXvvJoKCmBgYHBvd2Vyc2hlbGwKLlxzY3JpcHRzXGJ1aWxkLWNvZGV4LW1heC13aW5kb3dzLXNpbmdsZS1leGUucHMxCmBgYAo=
+# Codex Max Windows 启动器
+
+这个目录包含 Windows WPF 启动器。启动器只管理本地 VS Code Codex 插件控制服务：
+
+- 准备本地服务 payload
+- 启动、停止、重启 Node 服务
+- 显示 CDP 状态、端口、会话数量和日志入口
+- 打开或复制 `http://127.0.0.1:8787/`
+- 选择最近本地目录或 SSH 工作区
+- 拉起 `--remote-debugging-port=9339` 的受控 VS Code
+
+它不负责 Codex App/Codex Desktop、macOS、卡密验证、远程访问或系统级 GUI 回退。
+
+构建单文件 exe：
+
+```powershell
+.\scripts\build-codex-max-windows-single-exe.ps1
+```

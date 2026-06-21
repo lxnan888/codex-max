@@ -1,1 +1,94 @@
-dXNpbmcgU3lzdGVtLkRpYWdub3N0aWNzOwoKbmFtZXNwYWNlIENvZGV4TWluaVdpbjsKCmludGVybmFsIHNlYWxlZCBjbGFzcyBNaW5pUHJvY2Vzc01hbmFnZXIKewogICAgcHVibGljIGludCBGaW5kUG9ydE93bmVyUGlkKGludCBwb3J0KQogICAgewogICAgICAgIHRyeQogICAgICAgIHsKICAgICAgICAgICAgdmFyIHN0YXJ0ID0gbmV3IFByb2Nlc3NTdGFydEluZm8oIm5ldHN0YXQuZXhlIiwgIi1hbm8gLXAgdGNwIikKICAgICAgICAgICAgewogICAgICAgICAgICAgICAgQ3JlYXRlTm9XaW5kb3cgPSB0cnVlLAogICAgICAgICAgICAgICAgVXNlU2hlbGxFeGVjdXRlID0gZmFsc2UsCiAgICAgICAgICAgICAgICBSZWRpcmVjdFN0YW5kYXJkT3V0cHV0ID0gdHJ1ZSwKICAgICAgICAgICAgICAgIFJlZGlyZWN0U3RhbmRhcmRFcnJvciA9IHRydWUKICAgICAgICAgICAgfTsKICAgICAgICAgICAgdXNpbmcgdmFyIHByb2Nlc3MgPSBQcm9jZXNzLlN0YXJ0KHN0YXJ0KTsKICAgICAgICAgICAgaWYgKHByb2Nlc3MgaXMgbnVsbCkgcmV0dXJuIDA7CiAgICAgICAgICAgIHZhciBvdXRwdXQgPSBwcm9jZXNzLlN0YW5kYXJkT3V0cHV0LlJlYWRUb0VuZCgpOwogICAgICAgICAgICBwcm9jZXNzLldhaXRGb3JFeGl0KDI1MDApOwogICAgICAgICAgICBmb3JlYWNoICh2YXIgbGluZSBpbiBvdXRwdXQuU3BsaXQoJ1xuJykpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIHZhciBwYXJ0cyA9IGxpbmUuU3BsaXQoJyAnLCBTdHJpbmdTcGxpdE9wdGlvbnMuUmVtb3ZlRW1wdHlFbnRyaWVzKTsKICAgICAgICAgICAgICAgIGlmIChwYXJ0cy5MZW5ndGggPCA1KSBjb250aW51ZTsKICAgICAgICAgICAgICAgIGlmICghcGFydHNbMF0uRXF1YWxzKCJUQ1AiLCBTdHJpbmdDb21wYXJpc29uLk9yZGluYWxJZ25vcmVDYXNlKSkgY29udGludWU7CiAgICAgICAgICAgICAgICBpZiAoIXBhcnRzWzFdLkVuZHNXaXRoKCQiOntwb3J0fSIsIFN0cmluZ0NvbXBhcmlzb24uT3JkaW5hbCkpIGNvbnRpbnVlOwogICAgICAgICAgICAgICAgaWYgKCFwYXJ0c1szXS5FcXVhbHMoIkxJU1RFTklORyIsIFN0cmluZ0NvbXBhcmlzb24uT3JkaW5hbElnbm9yZUNhc2UpKSBjb250aW51ZTsKICAgICAgICAgICAgICAgIGlmIChpbnQuVHJ5UGFyc2UocGFydHNbNF0sIG91dCB2YXIgcGlkKSkgcmV0dXJuIHBpZDsKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICBjYXRjaAogICAgICAgIHsKICAgICAgICB9CiAgICAgICAgcmV0dXJuIDA7CiAgICB9CgogICAgcHVibGljIGJvb2wgSXNMaWtlbHlDb2RleE1heFNlcnZpY2UoaW50IHBpZCkKICAgIHsKICAgICAgICB0cnkKICAgICAgICB7CiAgICAgICAgICAgIHVzaW5nIHZhciBwcm9jZXNzID0gUHJvY2Vzcy5HZXRQcm9jZXNzQnlJZChwaWQpOwogICAgICAgICAgICB2YXIgbmFtZSA9IHByb2Nlc3MuUHJvY2Vzc05hbWU7CiAgICAgICAgICAgIHZhciBjb21tYW5kTGluZSA9IEdldFByb2Nlc3NDb21tYW5kTGluZShwaWQpOwogICAgICAgICAgICBpZiAoY29tbWFuZExpbmUuQ29udGFpbnMoInNlcnZlci5qcyIsIFN0cmluZ0NvbXBhcmlzb24uT3JkaW5hbElnbm9yZUNhc2UpKSByZXR1cm4gdHJ1ZTsKICAgICAgICAgICAgaWYgKGNvbW1hbmRMaW5lLkNvbnRhaW5zKCJDb2RleE1heFByb2plY3QiLCBTdHJpbmdDb21wYXJpc29uLk9yZGluYWxJZ25vcmVDYXNlKSkgcmV0dXJuIHRydWU7CiAgICAgICAgICAgIGlmIChjb21tYW5kTGluZS5Db250YWlucygiQ29kZXggTWF4IiwgU3RyaW5nQ29tcGFyaXNvbi5PcmRpbmFsSWdub3JlQ2FzZSkpIHJldHVybiB0cnVlOwogICAgICAgICAgICByZXR1cm4gbmFtZS5Db250YWlucygibm9kZSIsIFN0cmluZ0NvbXBhcmlzb24uT3JkaW5hbElnbm9yZUNhc2UpOwogICAgICAgIH0KICAgICAgICBjYXRjaAogICAgICAgIHsKICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwogICAgICAgIH0KICAgIH0KCiAgICBwdWJsaWMgYXN5bmMgVGFzayBLaWxsUHJvY2Vzc1RyZWVBc3luYyhpbnQgcGlkKQogICAgewogICAgICAgIHRyeQogICAgICAgIHsKICAgICAgICAgICAgdXNpbmcgdmFyIHByb2Nlc3MgPSBQcm9jZXNzLkdldFByb2Nlc3NCeUlkKHBpZCk7CiAgICAgICAgICAgIGlmIChwcm9jZXNzLkhhc0V4aXRlZCkgcmV0dXJuOwogICAgICAgICAgICBwcm9jZXNzLktpbGwoZW50aXJlUHJvY2Vzc1RyZWU6IHRydWUpOwogICAgICAgICAgICBhd2FpdCBwcm9jZXNzLldhaXRGb3JFeGl0QXN5bmMoKTsKICAgICAgICB9CiAgICAgICAgY2F0Y2gKICAgICAgICB7CiAgICAgICAgfQogICAgfQoKICAgIHByaXZhdGUgc3RhdGljIHN0cmluZyBHZXRQcm9jZXNzQ29tbWFuZExpbmUoaW50IHBpZCkKICAgIHsKICAgICAgICB0cnkKICAgICAgICB7CiAgICAgICAgICAgIHZhciBlc2NhcGVkID0gJCJQcm9jZXNzSWQgPSB7cGlkfSI7CiAgICAgICAgICAgIHZhciBzdGFydCA9IG5ldyBQcm9jZXNzU3RhcnRJbmZvKCJwb3dlcnNoZWxsLmV4ZSIsCiAgICAgICAgICAgICAgICAkIi1Ob0xvZ28gLU5vUHJvZmlsZSAtTm9uSW50ZXJhY3RpdmUgLUV4ZWN1dGlvblBvbGljeSBCeXBhc3MgLUNvbW1hbmQgXCIoR2V0LUNpbUluc3RhbmNlIFdpbjMyX1Byb2Nlc3MgLUZpbHRlciAne2VzY2FwZWR9JykuQ29tbWFuZExpbmVcIiIpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIENyZWF0ZU5vV2luZG93ID0gdHJ1ZSwKICAgICAgICAgICAgICAgIFVzZVNoZWxsRXhlY3V0ZSA9IGZhbHNlLAogICAgICAgICAgICAgICAgUmVkaXJlY3RTdGFuZGFyZE91dHB1dCA9IHRydWUsCiAgICAgICAgICAgICAgICBSZWRpcmVjdFN0YW5kYXJkRXJyb3IgPSB0cnVlCiAgICAgICAgICAgIH07CiAgICAgICAgICAgIHVzaW5nIHZhciBwcm9jZXNzID0gUHJvY2Vzcy5TdGFydChzdGFydCk7CiAgICAgICAgICAgIGlmIChwcm9jZXNzIGlzIG51bGwpIHJldHVybiAiIjsKICAgICAgICAgICAgdmFyIG91dHB1dCA9IHByb2Nlc3MuU3RhbmRhcmRPdXRwdXQuUmVhZFRvRW5kKCk7CiAgICAgICAgICAgIHByb2Nlc3MuV2FpdEZvckV4aXQoMjUwMCk7CiAgICAgICAgICAgIHJldHVybiBvdXRwdXQuVHJpbSgpOwogICAgICAgIH0KICAgICAgICBjYXRjaAogICAgICAgIHsKICAgICAgICAgICAgcmV0dXJuICIiOwogICAgICAgIH0KICAgIH0KfQo=
+using System.Diagnostics;
+
+namespace CodexMiniWin;
+
+internal sealed class MiniProcessManager
+{
+    public int FindPortOwnerPid(int port)
+    {
+        try
+        {
+            var start = new ProcessStartInfo("netstat.exe", "-ano -p tcp")
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            using var process = Process.Start(start);
+            if (process is null) return 0;
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(2500);
+            foreach (var line in output.Split('\n'))
+            {
+                var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length < 5) continue;
+                if (!parts[0].Equals("TCP", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!parts[1].EndsWith($":{port}", StringComparison.Ordinal)) continue;
+                if (!parts[3].Equals("LISTENING", StringComparison.OrdinalIgnoreCase)) continue;
+                if (int.TryParse(parts[4], out var pid)) return pid;
+            }
+        }
+        catch
+        {
+        }
+        return 0;
+    }
+
+    public bool IsLikelyCodexMaxService(int pid)
+    {
+        try
+        {
+            using var process = Process.GetProcessById(pid);
+            var name = process.ProcessName;
+            var commandLine = GetProcessCommandLine(pid);
+            if (commandLine.Contains("server.js", StringComparison.OrdinalIgnoreCase)) return true;
+            if (commandLine.Contains("CodexMaxProject", StringComparison.OrdinalIgnoreCase)) return true;
+            if (commandLine.Contains("Codex Max", StringComparison.OrdinalIgnoreCase)) return true;
+            return name.Contains("node", StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task KillProcessTreeAsync(int pid)
+    {
+        try
+        {
+            using var process = Process.GetProcessById(pid);
+            if (process.HasExited) return;
+            process.Kill(entireProcessTree: true);
+            await process.WaitForExitAsync();
+        }
+        catch
+        {
+        }
+    }
+
+    private static string GetProcessCommandLine(int pid)
+    {
+        try
+        {
+            var escaped = $"ProcessId = {pid}";
+            var start = new ProcessStartInfo("powershell.exe",
+                $"-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"(Get-CimInstance Win32_Process -Filter '{escaped}').CommandLine\"")
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            using var process = Process.Start(start);
+            if (process is null) return "";
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(2500);
+            return output.Trim();
+        }
+        catch
+        {
+            return "";
+        }
+    }
+}

@@ -1,1 +1,96 @@
-cGFyYW0oCiAgW3N0cmluZ10kT3V0cHV0RGlyID0gIiIsCiAgW3N0cmluZ10kTm9kZVBhdGggPSAiIgopCgokRXJyb3JBY3Rpb25QcmVmZXJlbmNlID0gJ1N0b3AnCiRyZXBvUm9vdCA9IFJlc29sdmUtUGF0aCAoSm9pbi1QYXRoICRQU1NjcmlwdFJvb3QgJy4uJykKaWYgKC1ub3QgJE91dHB1dERpcikgewogICRPdXRwdXREaXIgPSBKb2luLVBhdGggJHJlcG9Sb290ICdkaXN0XHdpbmRvd3NcQ29kZXggTWF4IFNpbmdsZUV4ZScKfQoKZnVuY3Rpb24gR2V0LURvdG5ldENsaSB7CiAgJGNhbmRpZGF0ZXMgPSBAKCkKICAkY21kID0gR2V0LUNvbW1hbmQgZG90bmV0LmV4ZSAtRXJyb3JBY3Rpb24gU2lsZW50bHlDb250aW51ZQogIGlmICgkY21kKSB7ICRjYW5kaWRhdGVzICs9ICRjbWQuU291cmNlIH0KICAkdXNlckRvdG5ldCA9IEpvaW4tUGF0aCAkZW52OlVTRVJQUk9GSUxFICcuZG90bmV0XGRvdG5ldC5leGUnCiAgaWYgKFRlc3QtUGF0aCAtTGl0ZXJhbFBhdGggJHVzZXJEb3RuZXQpIHsgJGNhbmRpZGF0ZXMgKz0gJHVzZXJEb3RuZXQgfQogICRtYWNoaW5lRG90bmV0ID0gSm9pbi1QYXRoICRlbnY6UHJvZ3JhbUZpbGVzICdkb3RuZXRcZG90bmV0LmV4ZScKICBpZiAoVGVzdC1QYXRoIC1MaXRlcmFsUGF0aCAkbWFjaGluZURvdG5ldCkgeyAkY2FuZGlkYXRlcyArPSAkbWFjaGluZURvdG5ldCB9CgogIGZvcmVhY2ggKCRjYW5kaWRhdGUgaW4gJGNhbmRpZGF0ZXMgfCBTZWxlY3QtT2JqZWN0IC1VbmlxdWUpIHsKICAgICRzZGtzID0gJiAkY2FuZGlkYXRlIC0tbGlzdC1zZGtzIDI+JG51bGwKICAgIGlmICgkc2RrcykgeyByZXR1cm4gJGNhbmRpZGF0ZSB9CiAgfQogIHJldHVybiAnJwp9CgokZG90bmV0ID0gR2V0LURvdG5ldENsaQppZiAoLW5vdCAkZG90bmV0KSB7CiAgdGhyb3cgJ1RoZSAuTkVUIDggU0RLIGlzIHJlcXVpcmVkIHRvIGJ1aWxkIHRoZSBXaW5kb3dzIGFwcC4gSW5zdGFsbCBpdCBmcm9tIGh0dHBzOi8vZG90bmV0Lm1pY3Jvc29mdC5jb20vZG93bmxvYWQnCn0KCmlmICgtbm90ICROb2RlUGF0aCkgewogICRjbWQgPSBHZXQtQ29tbWFuZCBub2RlLmV4ZSAtRXJyb3JBY3Rpb24gU2lsZW50bHlDb250aW51ZQogIGlmICgkY21kKSB7ICROb2RlUGF0aCA9ICRjbWQuU291cmNlIH0KfQoKaWYgKC1ub3QgJE5vZGVQYXRoIC1vciAtbm90IChUZXN0LVBhdGggLUxpdGVyYWxQYXRoICROb2RlUGF0aCkpIHsKICB0aHJvdyAnTm9kZS5qcyBpcyByZXF1aXJlZCBzbyBub2RlLmV4ZSBjYW4gYmUgYnVuZGxlZCBpbnRvIHRoZSBsYXVuY2hlciBwYXlsb2FkLicKfQoKaWYgKFRlc3QtUGF0aCAtTGl0ZXJhbFBhdGggJE91dHB1dERpcikgewogIFJlbW92ZS1JdGVtIC1MaXRlcmFsUGF0aCAkT3V0cHV0RGlyIC1SZWN1cnNlIC1Gb3JjZQp9CgokcGF5bG9hZFppcCA9IEpvaW4tUGF0aCAkcmVwb1Jvb3QgJ3dpbmRvd3NcQ29kZXhNaW5pXENvZGV4TWF4UGF5bG9hZC56aXAnCmlmIChUZXN0LVBhdGggLUxpdGVyYWxQYXRoICRwYXlsb2FkWmlwKSB7CiAgUmVtb3ZlLUl0ZW0gLUxpdGVyYWxQYXRoICRwYXlsb2FkWmlwIC1Gb3JjZQp9CgokcGF5bG9hZFRlbXAgPSBKb2luLVBhdGggJGVudjpURU1QICJjb2RleC1tYXgtcGF5bG9hZC0kUElEIgppZiAoVGVzdC1QYXRoIC1MaXRlcmFsUGF0aCAkcGF5bG9hZFRlbXApIHsKICBSZW1vdmUtSXRlbSAtTGl0ZXJhbFBhdGggJHBheWxvYWRUZW1wIC1SZWN1cnNlIC1Gb3JjZQp9Cgp0cnkgewogIE5ldy1JdGVtIC1JdGVtVHlwZSBEaXJlY3RvcnkgLUZvcmNlIC1QYXRoIChKb2luLVBhdGggJHBheWxvYWRUZW1wICdzZXJ2aWNlJykgfCBPdXQtTnVsbAogIENvcHktSXRlbSAtTGl0ZXJhbFBhdGggKEpvaW4tUGF0aCAkcmVwb1Jvb3QgJ3NlcnZlci5qcycpIC1EZXN0aW5hdGlvbiAoSm9pbi1QYXRoICRwYXlsb2FkVGVtcCAnc2VydmljZVxzZXJ2ZXIuanMnKSAtRm9yY2UKICBDb3B5LUl0ZW0gLUxpdGVyYWxQYXRoIChKb2luLVBhdGggJHJlcG9Sb290ICdwYWNrYWdlLmpzb24nKSAtRGVzdGluYXRpb24gKEpvaW4tUGF0aCAkcGF5bG9hZFRlbXAgJ3NlcnZpY2VccGFja2FnZS5qc29uJykgLUZvcmNlCiAgQ29weS1JdGVtIC1MaXRlcmFsUGF0aCAoSm9pbi1QYXRoICRyZXBvUm9vdCAnc3JjJykgLURlc3RpbmF0aW9uIChKb2luLVBhdGggJHBheWxvYWRUZW1wICdzZXJ2aWNlJykgLVJlY3Vyc2UgLUZvcmNlCiAgQ29weS1JdGVtIC1MaXRlcmFsUGF0aCAoSm9pbi1QYXRoICRyZXBvUm9vdCAncHVibGljJykgLURlc3RpbmF0aW9uIChKb2luLVBhdGggJHBheWxvYWRUZW1wICdzZXJ2aWNlJykgLVJlY3Vyc2UgLUZvcmNlCgogIE5ldy1JdGVtIC1JdGVtVHlwZSBEaXJlY3RvcnkgLUZvcmNlIC1QYXRoIChKb2luLVBhdGggJHBheWxvYWRUZW1wICdub2RlJykgfCBPdXQtTnVsbAogIENvcHktSXRlbSAtTGl0ZXJhbFBhdGggJE5vZGVQYXRoIC1EZXN0aW5hdGlvbiAoSm9pbi1QYXRoICRwYXlsb2FkVGVtcCAnbm9kZVxub2RlLmV4ZScpIC1Gb3JjZQoKICBDb21wcmVzcy1BcmNoaXZlIC1QYXRoIChKb2luLVBhdGggJHBheWxvYWRUZW1wICcqJykgLURlc3RpbmF0aW9uUGF0aCAkcGF5bG9hZFppcCAtRm9yY2UKfSBmaW5hbGx5IHsKICBpZiAoVGVzdC1QYXRoIC1MaXRlcmFsUGF0aCAkcGF5bG9hZFRlbXApIHsKICAgIFJlbW92ZS1JdGVtIC1MaXRlcmFsUGF0aCAkcGF5bG9hZFRlbXAgLVJlY3Vyc2UgLUZvcmNlCiAgfQp9CgokcHJvamVjdCA9IEpvaW4tUGF0aCAkcmVwb1Jvb3QgJ3dpbmRvd3NcQ29kZXhNaW5pXENvZGV4TWluaVdpbi5jc3Byb2onCiRwdWJsaXNoQXJncyA9IEAoCiAgJ3B1Ymxpc2gnLAogICRwcm9qZWN0LAogICctYycsCiAgJ1JlbGVhc2UnLAogICctcicsCiAgJ3dpbi14NjQnLAogICctLXNlbGYtY29udGFpbmVkJywKICAndHJ1ZScsCiAgJy1vJywKICAkT3V0cHV0RGlyLAogICcvcDpQdWJsaXNoU2luZ2xlRmlsZT10cnVlJywKICAnL3A6SW5jbHVkZU5hdGl2ZUxpYnJhcmllc0ZvclNlbGZFeHRyYWN0PXRydWUnLAogICcvcDpFbmFibGVDb21wcmVzc2lvbkluU2luZ2xlRmlsZT10cnVlJwopCgomICRkb3RuZXQgQHB1Ymxpc2hBcmdzCmlmICgkTEFTVEVYSVRDT0RFIC1uZSAwKSB7CiAgdGhyb3cgImRvdG5ldCBwdWJsaXNoIGZhaWxlZCB3aXRoIGV4aXQgY29kZSAkTEFTVEVYSVRDT0RFIgp9CgpHZXQtQ2hpbGRJdGVtIC1MaXRlcmFsUGF0aCAkT3V0cHV0RGlyIC1Gb3JjZSB8IFdoZXJlLU9iamVjdCB7ICRfLk5hbWUgLW5lICdDb2RleCBNYXguZXhlJyB9IHwgUmVtb3ZlLUl0ZW0gLVJlY3Vyc2UgLUZvcmNlCldyaXRlLUhvc3QgIldpbmRvd3Mgc2luZ2xlIGV4ZTogJChKb2luLVBhdGggJE91dHB1dERpciAnQ29kZXggTWF4LmV4ZScpIgo=
+param(
+  [string]$OutputDir = "",
+  [string]$NodePath = ""
+)
+
+$ErrorActionPreference = 'Stop'
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+if (-not $OutputDir) {
+  $OutputDir = Join-Path $repoRoot 'dist\windows\Codex Max SingleExe'
+}
+
+function Get-DotnetCli {
+  $candidates = @()
+  $cmd = Get-Command dotnet.exe -ErrorAction SilentlyContinue
+  if ($cmd) { $candidates += $cmd.Source }
+  $userDotnet = Join-Path $env:USERPROFILE '.dotnet\dotnet.exe'
+  if (Test-Path -LiteralPath $userDotnet) { $candidates += $userDotnet }
+  $machineDotnet = Join-Path $env:ProgramFiles 'dotnet\dotnet.exe'
+  if (Test-Path -LiteralPath $machineDotnet) { $candidates += $machineDotnet }
+
+  foreach ($candidate in $candidates | Select-Object -Unique) {
+    $sdks = & $candidate --list-sdks 2>$null
+    if ($sdks) { return $candidate }
+  }
+  return ''
+}
+
+$dotnet = Get-DotnetCli
+if (-not $dotnet) {
+  throw 'The .NET 8 SDK is required to build the Windows app. Install it from https://dotnet.microsoft.com/download'
+}
+
+if (-not $NodePath) {
+  $cmd = Get-Command node.exe -ErrorAction SilentlyContinue
+  if ($cmd) { $NodePath = $cmd.Source }
+}
+
+if (-not $NodePath -or -not (Test-Path -LiteralPath $NodePath)) {
+  throw 'Node.js is required so node.exe can be bundled into the launcher payload.'
+}
+
+if (Test-Path -LiteralPath $OutputDir) {
+  Remove-Item -LiteralPath $OutputDir -Recurse -Force
+}
+
+$payloadZip = Join-Path $repoRoot 'windows\CodexMini\CodexMaxPayload.zip'
+if (Test-Path -LiteralPath $payloadZip) {
+  Remove-Item -LiteralPath $payloadZip -Force
+}
+
+$payloadTemp = Join-Path $env:TEMP "codex-max-payload-$PID"
+if (Test-Path -LiteralPath $payloadTemp) {
+  Remove-Item -LiteralPath $payloadTemp -Recurse -Force
+}
+
+try {
+  New-Item -ItemType Directory -Force -Path (Join-Path $payloadTemp 'service') | Out-Null
+  Copy-Item -LiteralPath (Join-Path $repoRoot 'server.js') -Destination (Join-Path $payloadTemp 'service\server.js') -Force
+  Copy-Item -LiteralPath (Join-Path $repoRoot 'package.json') -Destination (Join-Path $payloadTemp 'service\package.json') -Force
+  Copy-Item -LiteralPath (Join-Path $repoRoot 'src') -Destination (Join-Path $payloadTemp 'service') -Recurse -Force
+  Copy-Item -LiteralPath (Join-Path $repoRoot 'public') -Destination (Join-Path $payloadTemp 'service') -Recurse -Force
+
+  New-Item -ItemType Directory -Force -Path (Join-Path $payloadTemp 'node') | Out-Null
+  Copy-Item -LiteralPath $NodePath -Destination (Join-Path $payloadTemp 'node\node.exe') -Force
+
+  Compress-Archive -Path (Join-Path $payloadTemp '*') -DestinationPath $payloadZip -Force
+} finally {
+  if (Test-Path -LiteralPath $payloadTemp) {
+    Remove-Item -LiteralPath $payloadTemp -Recurse -Force
+  }
+}
+
+$project = Join-Path $repoRoot 'windows\CodexMini\CodexMiniWin.csproj'
+$publishArgs = @(
+  'publish',
+  $project,
+  '-c',
+  'Release',
+  '-r',
+  'win-x64',
+  '--self-contained',
+  'true',
+  '-o',
+  $OutputDir,
+  '/p:PublishSingleFile=true',
+  '/p:IncludeNativeLibrariesForSelfExtract=true',
+  '/p:EnableCompressionInSingleFile=true'
+)
+
+& $dotnet @publishArgs
+if ($LASTEXITCODE -ne 0) {
+  throw "dotnet publish failed with exit code $LASTEXITCODE"
+}
+
+Get-ChildItem -LiteralPath $OutputDir -Force | Where-Object { $_.Name -ne 'Codex Max.exe' } | Remove-Item -Recurse -Force
+Write-Host "Windows single exe: $(Join-Path $OutputDir 'Codex Max.exe')"

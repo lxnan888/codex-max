@@ -1,1 +1,13 @@
-IyBDaGFuZ2Vsb2cKCiMjIFVucmVsZWFzZWQKCi0g6YeN5p6E5Li6IFdpbmRvd3MgKyBWUyBDb2RlIENvZGV4IOaPkuS7tuacrOWcsOeJiO+8jOWPquaUr+aMgSBWUyBDb2RlIOS4reeahCBDb2RleCDmj5Lku7bjgIIKLSDliKDpmaQgQ29kZXggQXBwL0NvZGV4IERlc2t0b3DjgIFtYWNPU+OAgeezu+e7n+e6pyBHVUkg5Zue6YCA44CB6L+c56iL6K6/6Zeu44CB5o6I5p2D5qCh6aqM44CB5Lit6L2s5pyN5Yqh5ZKM5aSa57q/6Lev5YWl5Y+j5Luj56CB44CCCi0gV2ViVUkg5ZKMIFdpbmRvd3MgV1BGIOWQr+WKqOWZqOS/neeVme+8jOWFpeWPo+WbuuWumuS4uiBgaHR0cDovLzEyNy4wLjAuMTo4Nzg3L2DjgIIKLSDlkK/liqjlmajlop7liqDmnKzlnLDnm67lvZUvU1NIIOW3peS9nOWMuuS4i+aLie+8jOeCueWHu+KAnOWQr+WKqCBWU0NvZGXigJ3lkI7miY3lkK/liqjmnI3liqHlubbmi4notbflj5fmjqcgVlMgQ29kZeOAggotIOWOhuWPsuOAgea2iOaBr+WSjOeKtuaAgeaUueS4uuS7jiBWUyBDb2RlIENvZGV4IFdlYlZpZXcgR1VJIOWunuaXtuivu+WPlu+8jOS4jeWGjeivu+WPluacrOWcsOaIlui/nOerr+S8muivneaWh+S7tuOAggotIOS/ruWkjSBXZWJVSSDlkI7lj7Dova7or6Lop6blj5Hku7vliqHliJfooajngrnlh7vlr7zoh7QgVlMgQ29kZSDkvJror53ot7PmnaXot7PljrvnmoTpl67popjjgIIKLSDkv67lpI3kvJror50gaWQg5L2/55So55u45a+55pe26Ze05a+86Ie05LiN56iz5a6a55qE6Zeu6aKY77yM5pS55Li65Z+65LqO5Lya6K+d5qCH6aKY55Sf5oiQ56iz5a6aIGtleeOAggotIOS/ruWkjeWPkemAgeaXtuivr+eCuSBjb21wb3NlciDlkajovrnmjInpkq7jgIHovpPlhaXmoYbmrovnlZkgYC9gIOaIluaXp+WGheWuuea3t+WFpeeahOmXrumimOOAggotIOWPkemAgeWQjuaUueS4uuefrei9ruivouehruiupOaPkOS6pOeKtuaAge+8jOmBv+WFjSBWUyBDb2RlIOW3suWPkemAgeS9huaOpeWPo+ivr+aKpeWksei0peOAggo=
+# Changelog
+
+## Unreleased
+
+- 重构为 Windows + VS Code Codex 插件本地版，只支持 VS Code 中的 Codex 插件。
+- 删除 Codex App/Codex Desktop、macOS、系统级 GUI 回退、远程访问、授权校验、中转服务和多线路入口代码。
+- WebUI 和 Windows WPF 启动器保留，入口固定为 `http://127.0.0.1:8787/`。
+- 启动器增加本地目录/SSH 工作区下拉，点击“启动 VSCode”后才启动服务并拉起受控 VS Code。
+- 历史、消息和状态改为从 VS Code Codex WebView GUI 实时读取，不再读取本地或远端会话文件。
+- 修复 WebUI 后台轮询触发任务列表点击导致 VS Code 会话跳来跳去的问题。
+- 修复会话 id 使用相对时间导致不稳定的问题，改为基于会话标题生成稳定 key。
+- 修复发送时误点 composer 周边按钮、输入框残留 `/` 或旧内容混入的问题。
+- 发送后改为短轮询确认提交状态，避免 VS Code 已发送但接口误报失败。
